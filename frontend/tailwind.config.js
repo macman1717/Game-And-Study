@@ -2,10 +2,17 @@
 module.exports = {
   content: [
     './src/**/*.{html,ts}',
-    './node_modules/primeng/**/*.ts'
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primary: '#0B131E',
+        secondary: '#202B3B',
+        tertiary: '#5688C7',
+        textprimary: '#EEF4ED',
+        textsecondary: '#CFDBD5',
+      }
+    },
   },
   plugins: [],
 }
