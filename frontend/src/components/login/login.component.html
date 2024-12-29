@@ -2,16 +2,16 @@
     <div class="w-full max-w-md bg-secondary p-8 rounded-lg shadow-lg">
         <h2 class="text-3xl font-semibold text-center text-textprimary mb-6">Sign In</h2>
 
-        <form action="#" method="POST">
+        <form (submit)="onSubmit()" method="POST">
             <div class="mb-4">
                 <label for="email" class="block text-sm font-medium text-gray-400">Email Address</label>
-                <input type="email" id="email" name="email" required
+                <input [(ngModel)]="email" id="email" name="email" required
                     class="w-full p-3 mt-2 bg-gray-700 text-gray-200 rounded-md border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
             </div>
 
             <div class="mb-6">
                 <label for="password" class="block text-sm font-medium text-gray-400">Password</label>
-                <input type="password" id="password" name="password" required
+                <input [(ngModel)]="password" type="password" id="password" name="password" required
                     class="w-full p-3 mt-2 bg-gray-700 text-gray-200 rounded-md border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
             </div>
 
