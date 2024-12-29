@@ -7,5 +7,6 @@ import java.util.Date;
 @Data
 public class CreatedSet {
     private String setName;
-    private Date dateLastAccessed;
+    private String dateLastAccessed;
+    private int numOfTerms;
 }
