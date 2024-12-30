@@ -78,14 +78,11 @@ public class SetController {
 
     @DeleteMapping("/delete-set/{setName}")
     public ResponseEntity<String> deleteSet(@RequestHeader(name="Authorization") String token, @PathVariable String setName) {
-        System.out.println("Called");
         token = token.split(" ")[1].trim();
         String username = jwtService.extractUsername(token);
         Optional<CardSet> optSet = setRepo.findSetByNameAndOwner(setName, username);
         if(optSet.isPresent()){
-           CardSet set =  optSet.get();
-           System.out.println(username);
-           System.out.println(set.getOwnerUsername());
+           CardSet set = optSet.get();
            if(set.getOwnerUsername().equals(username)){
                setRepo.delete(set);
                return ResponseEntity.status(HttpStatus.OK).build();
