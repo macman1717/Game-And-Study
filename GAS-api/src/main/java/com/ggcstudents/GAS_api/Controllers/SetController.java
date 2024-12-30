@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Optional;
@@ -29,7 +30,12 @@ public class SetController {
         this.libraryRepository = libraryRepository;
     }
 
-    @PostMapping("create-set/{setName}")
+    @GetMapping("/sets")
+    public ArrayList<CardSet> getSets(@RequestHeader(name="Authorization") String token){
+        String username = jwtService.extractUsername(token);
+        return setRepo.findAllByUsername(username);
+    }
+    @PostMapping("/create-set")
     public ResponseEntity<String> createSet(@RequestHeader(name="Authorization") String token, @RequestBody CardSet set){
         if(set.getOwnerUsername().equals(jwtService.extractUsername(token))){
             Optional<CardSet> optionalSet = setRepo.findSetByNameAndOwner(set.getName(), set.getOwnerUsername());
@@ -57,5 +63,34 @@ public class SetController {
             }
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
+    @DeleteMapping("/delete-set/{setName}")
+    public ResponseEntity<String> createSet(@RequestHeader(name="Authorization") String token, @PathVariable String setName) {
+        String username = jwtService.extractUsername(token);
+        Optional<CardSet> optSet = setRepo.findSetByNameAndOwner(setName, username);
+        if(optSet.isPresent()){
+           CardSet set =  optSet.get();
+           if(set.getOwnerUsername().equals(username)){
+               setRepo.delete(set);
+               return ResponseEntity.status(HttpStatus.OK).build();
+           }else{
+               return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+           }
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @PutMapping("/update-set")
+    public ResponseEntity<String> updateSet(@RequestHeader(name="Authorization") String token, @RequestBody CardSet set){
+        String username = jwtService.extractUsername(token);
+        if(username.equals(set.getOwnerUsername())){
+            setRepo.save(set);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }else{
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 }
