@@ -14,7 +14,7 @@ public class CardSet {
     private String id;
     private String name;
     private String ownerUsername;
+    private String dateCreated;
     private boolean visibility;
-    private Date dateCreated;
     private ArrayList<Card> cards;
 }

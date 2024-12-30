@@ -4,6 +4,7 @@ import com.ggcstudents.GAS_api.Repositories.GasUserRepository;
 import com.ggcstudents.GAS_api.Services.GasUserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -35,7 +36,7 @@ public class SecurityConfig {
         return http
                 .authorizeHttpRequests((authz) -> authz
                         .requestMatchers("/auth/generateToken", "/auth/register").permitAll()
-                        .requestMatchers("/auth/hello","/auth/userEmail","/auth/userSets").authenticated()
+                        .requestMatchers("/auth/hello","/auth/userEmail","/auth/userSets", "/sets/**", "/set/delete-set/{}").authenticated()
                 )
                 .httpBasic(withDefaults()).csrf((csrf) -> csrf.disable())
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

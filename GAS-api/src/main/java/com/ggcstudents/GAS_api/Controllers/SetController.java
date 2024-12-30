@@ -32,32 +32,37 @@ public class SetController {
 
     @GetMapping("/sets")
     public ArrayList<CardSet> getSets(@RequestHeader(name="Authorization") String token){
+        token = token.split(" ")[1].trim();
         String username = jwtService.extractUsername(token);
         return setRepo.findAllByUsername(username);
     }
     @GetMapping("/sets/{setName}")
     public CardSet getSet(@RequestHeader(name="Authorization") String token, @PathVariable String setName){
+        token = token.split(" ")[1].trim();
         String username = jwtService.extractUsername(token);
         Optional<CardSet> optSet = setRepo.findSetByNameAndOwner(setName, username);
         return optSet.orElse(null);
     }
     @PostMapping("/create-set")
     public ResponseEntity<String> createSet(@RequestHeader(name="Authorization") String token, @RequestBody CardSet set){
+        token = token.split(" ")[1].trim();
         if(set.getOwnerUsername().equals(jwtService.extractUsername(token))){
             Optional<CardSet> optionalSet = setRepo.findSetByNameAndOwner(set.getName(), set.getOwnerUsername());
             if(optionalSet.isPresent()){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Set with name " + set.getName() + " already exists");
             }else{
-                setRepo.insert(set);
+                
                 CreatedSet createdSet = new CreatedSet();
                 createdSet.setSetName(set.getName());
                 createdSet.setNumOfTerms(set.getCards().size());
 
                 Calendar cal = Calendar.getInstance();
                 Date date=cal.getTime();
-                DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+                DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
                 String formattedDate=dateFormat.format(date);
                 createdSet.setDateLastAccessed(formattedDate);
+                set.setDateCreated(formattedDate);
+                setRepo.insert(set);
 
                 Optional<Library> optLib = libraryRepository.findLibraryByUser(set.getOwnerUsername());
                 if(optLib.isPresent()) {
@@ -65,18 +70,22 @@ public class SetController {
                     lib.getCreatedSets().add(createdSet);
                     libraryRepository.save(lib);
                 }
-
+                return ResponseEntity.status(HttpStatus.OK).build();
             }
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     @DeleteMapping("/delete-set/{setName}")
-    public ResponseEntity<String> createSet(@RequestHeader(name="Authorization") String token, @PathVariable String setName) {
+    public ResponseEntity<String> deleteSet(@RequestHeader(name="Authorization") String token, @PathVariable String setName) {
+        System.out.println("Called");
+        token = token.split(" ")[1].trim();
         String username = jwtService.extractUsername(token);
         Optional<CardSet> optSet = setRepo.findSetByNameAndOwner(setName, username);
         if(optSet.isPresent()){
            CardSet set =  optSet.get();
+           System.out.println(username);
+           System.out.println(set.getOwnerUsername());
            if(set.getOwnerUsername().equals(username)){
                setRepo.delete(set);
                return ResponseEntity.status(HttpStatus.OK).build();
@@ -91,6 +100,7 @@ public class SetController {
 
     @PutMapping("/update-set")
     public ResponseEntity<String> updateSet(@RequestHeader(name="Authorization") String token, @RequestBody CardSet set){
+        token = token.split(" ")[1].trim();
         String username = jwtService.extractUsername(token);
         if(username.equals(set.getOwnerUsername())){
             setRepo.save(set);
