@@ -35,6 +35,12 @@ public class SetController {
         String username = jwtService.extractUsername(token);
         return setRepo.findAllByUsername(username);
     }
+    @GetMapping("/sets/{setName}")
+    public CardSet getSet(@RequestHeader(name="Authorization") String token, @PathVariable String setName){
+        String username = jwtService.extractUsername(token);
+        Optional<CardSet> optSet = setRepo.findSetByNameAndOwner(setName, username);
+        return optSet.orElse(null);
+    }
     @PostMapping("/create-set")
     public ResponseEntity<String> createSet(@RequestHeader(name="Authorization") String token, @RequestBody CardSet set){
         if(set.getOwnerUsername().equals(jwtService.extractUsername(token))){
