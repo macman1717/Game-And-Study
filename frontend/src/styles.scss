@@ -1,0 +1,17 @@
+/* You can add global styles to this file, and also import other style files */
+@use "tailwindcss/base";
+@use "tailwindcss/components";
+@use "tailwindcss/utilities";
+
+body {
+    @apply bg-primary text-textprimary;
+    font-family: 'Inter', sans-serif;
+}
+
+a {
+    @apply text-textprimary hover:text-blue-400;
+}
+
+button {
+    @apply bg-tertiary text-textprimary hover:text-textsecondary rounded-md py-2 px-4;
+}
