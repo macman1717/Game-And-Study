@@ -16,10 +16,8 @@ export class HomePageComponent {
   constructor(private setService: SetService) {}
   
   ngOnInit(): void {
-    console.log("Making subscription");
     this.setService.getSets().subscribe(
       (data) => {
-        console.log("Got sets");
         this.sets = data;
       },
       (error) => {

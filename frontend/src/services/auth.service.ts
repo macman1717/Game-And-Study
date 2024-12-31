@@ -11,9 +11,7 @@ export class AuthService {
   public platformId!: number;
 
   constructor(private http: HttpClient, @Inject(PLATFORM_ID) platformId: number) {
-    console.log(this.platformId);
     this.platformId = platformId;
-    console.log(this.platformId);
   }
 
 
@@ -22,9 +20,6 @@ export class AuthService {
   }
 
   getAuthToken(): string {
-    console.log("Hi");
-    console.log(this.platformId);
-    console.log(isPlatformBrowser(this.platformId));
     if (isPlatformBrowser(this.platformId)) {
       const authToken = localStorage.getItem('authToken');
       if (!authToken) {
@@ -32,7 +27,7 @@ export class AuthService {
       }
       return authToken;
     } else {
-      return '';
+      return 'fakeToken';
     }
   }
 }

@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   standalone: true,
@@ -11,4 +12,10 @@ export class SetComponent {
   @Input() setName!: string;
   @Input() owner!: string;
   @Input() termCount!: number;
+  @Input() id!: string;
+
+  constructor(private router: Router) { }
+  onClick() {
+    this.router.navigate(['/sets', this.id]);
+  }
 }
