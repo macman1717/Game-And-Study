@@ -1,4 +1,4 @@
-import { Component, input, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   standalone: true,
@@ -10,5 +10,5 @@ import { Component, input, Input } from '@angular/core';
 export class SetComponent {
   @Input() setName!: string;
   @Input() owner!: string;
-  @Input() termCount!: string;
+  @Input() termCount!: number;
 }

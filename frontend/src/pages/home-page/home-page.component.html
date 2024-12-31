@@ -47,5 +47,15 @@
 <div class="p-16 sm:ml-64">
     <h1 class="text-4xl mb-8"><b>Your Library</b></h1>
 
-    <app-set owner="sean" setName="sean's set" termCount="12"></app-set>
+    @if (sets.length > 0) {
+        @for (set of sets; track set.id) {
+            <app-set 
+                [owner]=set.ownerUsername 
+                [setName]=set.name 
+                [termCount]=set.cards.length>
+            </app-set>
+        }
+    } @else {
+        <p class="text-lg">You don't have any sets.</p>
+    }
 </div>
