@@ -7,7 +7,7 @@ export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn) 
     if (excludedUrls.some(url => req.url.includes(url))) {
         return next(req);
     }
-
+    
     const authToken = inject(AuthService).getAuthToken();
     const newReq = req.clone({
         headers: req.headers.append('Authorization', `Bearer ${authToken}`),
