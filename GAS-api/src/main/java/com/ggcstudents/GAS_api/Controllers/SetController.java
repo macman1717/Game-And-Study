@@ -36,20 +36,19 @@ public class SetController {
         String username = jwtService.extractUsername(token);
         return setRepo.findAllByUsername(username);
     }
-    @GetMapping("/sets/{setName}")
-    public CardSet getSet(@RequestHeader(name="Authorization") String token, @PathVariable String setName){
+    @GetMapping("/sets/{id}")
+    public CardSet getSet(@RequestHeader(name="Authorization") String token, @PathVariable String id){
         token = token.split(" ")[1].trim();
-        String username = jwtService.extractUsername(token);
-        Optional<CardSet> optSet = setRepo.findSetByNameAndOwner(setName, username);
+        Optional<CardSet> optSet = setRepo.findById(id);
         return optSet.orElse(null);
     }
     @PostMapping("/create-set")
     public ResponseEntity<String> createSet(@RequestHeader(name="Authorization") String token, @RequestBody CardSet set){
         token = token.split(" ")[1].trim();
         if(set.getOwnerUsername().equals(jwtService.extractUsername(token))){
-            Optional<CardSet> optionalSet = setRepo.findSetByNameAndOwner(set.getName(), set.getOwnerUsername());
+            Optional<CardSet> optionalSet = setRepo.findById(set.getId());
             if(optionalSet.isPresent()){
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Set with name " + set.getName() + " already exists");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Set with id " + set.getId() + " already exists");
             }else{
                 
                 CreatedSet createdSet = new CreatedSet();
@@ -76,11 +75,11 @@ public class SetController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    @DeleteMapping("/delete-set/{setName}")
-    public ResponseEntity<String> deleteSet(@RequestHeader(name="Authorization") String token, @PathVariable String setName) {
+    @DeleteMapping("/delete-set/{id}")
+    public ResponseEntity<String> deleteSet(@RequestHeader(name="Authorization") String token, @PathVariable String id) {
         token = token.split(" ")[1].trim();
         String username = jwtService.extractUsername(token);
-        Optional<CardSet> optSet = setRepo.findSetByNameAndOwner(setName, username);
+        Optional<CardSet> optSet = setRepo.findById(id);
         if(optSet.isPresent()){
            CardSet set = optSet.get();
            if(set.getOwnerUsername().equals(username)){
