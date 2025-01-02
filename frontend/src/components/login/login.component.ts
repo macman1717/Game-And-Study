@@ -20,7 +20,6 @@ export class LoginComponent {
     const authRequest = { username: this.email, password: this.password };
     this.authService.generateToken(authRequest).subscribe({
       next: (token) => {
-        console.log('Token received:', token);
         localStorage.setItem('authToken', token);
         this.router.navigate(['/dashboard']);
       },
