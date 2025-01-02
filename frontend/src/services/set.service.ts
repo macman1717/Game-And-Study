@@ -22,4 +22,12 @@ export class SetService {
       return of([]);
     }
   }
+
+  getSetDetails(id: string): Observable<Set> {
+    if (isPlatformBrowser(this.platformId)) {
+      return this.http.get<Set>(`${this.baseUrl}/sets/${id}`);
+    } else {
+      return of();
+    }
+  }
 }
