@@ -5,6 +5,7 @@ import { Card } from '../../models/set.model';
 import { Set } from '../../models/set.model';
 import { SetService } from '../../services/set.service';
 import { CardComponent } from "../../components/card/card.component";
+import { Router } from '@angular/router';
 
 @Component({
   standalone: true,
@@ -17,7 +18,19 @@ export class SetPageComponent implements OnInit {
   setId!: string;
   set!: Set;
 
-  constructor(private route: ActivatedRoute, private setService: SetService) {}
+  constructor(private route: ActivatedRoute, private setService: SetService, private router: Router) { }
+
+  onDelete(): void {
+    if (!confirm("Are you sure you want to delete this set?")) {
+      return;
+    }
+
+    this.setService.deleteSet(this.setId).subscribe({
+      next: () => {
+        this.router.navigate(['/sets']);
+      }
+    });
+  }
 
   ngOnInit() {
     this.setId = this.route.snapshot.paramMap.get('id')!;

@@ -30,4 +30,8 @@ export class SetService {
       return of();
     }
   }
+
+  deleteSet(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/delete-set/${id}`);
+  }
 }
